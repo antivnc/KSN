@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: test
+    id: untitled
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -33,7 +33,7 @@ options:
     state: enabled
 
 blocks:
-- name: freq
+- name: noise
   id: variable_qtgui_range
   parameters:
     comment: ''
@@ -41,45 +41,24 @@ blocks:
     label: ''
     min_len: '200'
     orient: QtCore.Qt.Horizontal
-    rangeType: int
+    rangeType: float
     start: '0'
-    step: '1'
-    stop: '100'
-    value: '50'
+    step: '0.1'
+    stop: '1'
+    value: '0'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 16.0]
-    rotation: 0
-    state: enabled
-- name: freq_center
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: ''
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: int
-    start: '60000000'
-    step: '200000'
-    stop: '120000000'
-    value: '91000000'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [424, 16.0]
+    coordinate: [304, 16.0]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: '5000000'
+    value: int(44.1e3)
   states:
     bus_sink: false
     bus_source: false
@@ -87,27 +66,25 @@ blocks:
     coordinate: [184, 12]
     rotation: 0
     state: enabled
-- name: analog_sig_source_x_0
-  id: analog_sig_source_x
+- name: vol
+  id: variable_qtgui_range
   parameters:
-    affinity: ''
-    alias: ''
-    amp: '1'
     comment: ''
-    freq: freq
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    offset: '0'
-    phase: '0'
-    samp_rate: samp_rate
-    showports: 'False'
-    type: complex
-    waveform: analog.GR_COS_WAVE
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '1'
+    step: '1'
+    stop: '10'
+    value: '1'
+    widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 368.0]
+    coordinate: [448, 16.0]
     rotation: 0
     state: enabled
 - name: analog_wfm_rcv_0
@@ -119,12 +96,32 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    quad_rate: '250000'
+    quad_rate: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 304.0]
+    coordinate: [1224, 400.0]
+    rotation: 0
+    state: enabled
+- name: analog_wfm_tx_0
+  id: analog_wfm_tx
+  parameters:
+    affinity: ''
+    alias: ''
+    audio_rate: samp_rate
+    comment: ''
+    fh: '-1.0'
+    max_dev: 5e3
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    quad_rate: samp_rate
+    tau: 75e-6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [592, 280.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -141,11 +138,30 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 504.0]
+    coordinate: [1232, 544.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_xx_0
-  id: blocks_multiply_xx
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '44100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 400.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
   parameters:
     affinity: ''
     alias: ''
@@ -153,13 +169,70 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '2'
-    type: complex
+    type: float
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 304.0]
+    coordinate: [456, 304.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 400.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: vol
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1240, 480.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'False'
+    comment: ''
+    epsilon: '1.0'
+    freq_offset: '0.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: noise
+    seed: '0'
+    taps: '1.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1016, 272.0]
     rotation: 0
     state: enabled
 - name: filerepeater_file_repeater_ex_0
@@ -176,38 +249,14 @@ blocks:
     repeat: 'True'
     repeat_delay: '0'
     repeat_times: '0'
-    type: complex
+    type: float
     verbose: 'False'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 200.0]
-    rotation: 0
-    state: enabled
-- name: low_pass_filter_0
-  id: low_pass_filter
-  parameters:
-    affinity: ''
-    alias: ''
-    beta: '6.76'
-    comment: ''
-    cutoff_freq: '40000'
-    decim: '1'
-    gain: '1'
-    interp: '1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_rate: samp_rate
-    type: fir_filter_ccf
-    width: '4000'
-    win: window.WIN_HAMMING
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [448, 264.0]
+    coordinate: [40, 240.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -241,9 +290,9 @@ blocks:
     color9: '"dark green"'
     comment: ''
     ctrlpanel: 'False'
-    fc: freq_center
+    fc: '0'
     fftsize: '1024'
-    freqhalf: 'False'
+    freqhalf: 'True'
     grid: 'False'
     gui_hint: ''
     label: Relative Gain
@@ -288,7 +337,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 296.0]
+    coordinate: [848, 152.0]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_0
@@ -319,9 +368,9 @@ blocks:
     color8: '0'
     color9: '0'
     comment: ''
-    fc: 91e6
+    fc: '0'
     fftsize: '1024'
-    freqhalf: 'False'
+    freqhalf: 'True'
     grid: 'False'
     gui_hint: ''
     int_max: '10'
@@ -349,7 +398,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 128.0]
+    coordinate: [848, 40.0]
     rotation: 0
     state: enabled
 - name: rational_resampler_xxx_0
@@ -364,24 +413,48 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     taps: '[]'
-    type: fff
+    type: ccc
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 288.0]
+    coordinate: [832, 288.0]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_0_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '100'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: '[]'
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 288.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
-- [analog_wfm_rcv_0, '0', rational_resampler_xxx_0, '0']
-- [blocks_multiply_xx_0, '0', low_pass_filter_0, '0']
-- [filerepeater_file_repeater_ex_0, '0', blocks_multiply_xx_0, '0']
-- [low_pass_filter_0, '0', analog_wfm_rcv_0, '0']
-- [rational_resampler_xxx_0, '0', audio_sink_0, '0']
-- [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
-- [rational_resampler_xxx_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [analog_wfm_rcv_0, '0', blocks_multiply_const_vxx_1, '0']
+- [analog_wfm_tx_0, '0', rational_resampler_xxx_0, '0']
+- [audio_source_0, '0', blocks_multiply_const_vxx_0, '0']
+- [blocks_add_xx_0, '0', analog_wfm_tx_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_add_xx_0, '1']
+- [blocks_multiply_const_vxx_1, '0', audio_sink_0, '0']
+- [channels_channel_model_0, '0', rational_resampler_xxx_0_0, '0']
+- [filerepeater_file_repeater_ex_0, '0', blocks_add_xx_0, '0']
+- [filerepeater_file_repeater_ex_0, '0', qtgui_freq_sink_x_0, '0']
+- [filerepeater_file_repeater_ex_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [rational_resampler_xxx_0, '0', channels_channel_model_0, '0']
+- [rational_resampler_xxx_0_0, '0', analog_wfm_rcv_0, '0']
 
 metadata:
   file_format: 1
