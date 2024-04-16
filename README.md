@@ -10,5 +10,3 @@ Der Advanced File Source mit (radio.dat) wird mit dem Signal Source multiplizier
 KSN 2:
 
 Der Advanced File Source mit (radio.dat) wird mit einem Audio Source, welcher vorerst multipliziert wird, addiert. Dieses Signal läuft dann in den WBFM Transmit, welcher in weiterer Folge in einen Rational Resampler und in einen Channel Model läuft. Dies wird in einen weiteren Rational Resampler weitergeführt welcher dann im WBFM Recieve landet. Dieses Ausgangssignal wird nochmals multipliziert und wird dann im Audio Sink ausgegeben. Radio.dat wird im Waterfall Sink und im Frequency Sink ausgegeben.
-
-Ergebnis: In beiden Fällen hört man ein gewisses Rauschen.
